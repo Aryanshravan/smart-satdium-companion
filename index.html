@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ARENA – Smart Stadium Companion</title>
+    <meta name="description"
+        content="AI-powered stadium companion app for navigation, food ordering, crowd tracking, and real-time assistance at live sporting events.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- ======================== SPLASH SCREEN ======================== -->
+    <div id="splash-screen" class="splash">
+        <div class="splash-content">
+            <div class="splash-logo">
+                <div class="splash-icon">
+                    <span class="material-symbols-rounded">stadium</span>
+                </div>
+                <h1 class="splash-title">ARENA</h1>
+                <p class="splash-subtitle">Smart Stadium Companion</p>
+            </div>
+            <div class="splash-loader">
+                <div class="loader-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================== MAIN APP ======================== -->
+    <div id="app" class="app hidden">
+
+        <!-- =============== HOME SCREEN =============== -->
+        <section id="screen-home" class="screen active">
+            <div class="screen-content">
+                <header class="screen-header">
+                    <div class="header-left">
+                        <h1 class="app-logo">ARENA</h1>
+                        <span class="status-badge live"><span class="live-dot"></span> LIVE</span>
+                    </div>
+                    <div class="header-right">
+                        <button class="icon-btn notification-btn" id="notification-btn"
+                            onclick="openModal('notification-modal')">
+                            <span class="material-symbols-rounded">notifications</span>
+                            <span class="notif-badge">3</span>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Live Score Card -->
+                <div class="live-score-card" id="live-score-card">
+                    <div class="score-header">
+                        <span class="match-label">ICC Cricket World Cup 2026</span>
+                        <span class="match-status live-pulse">● LIVE</span>
+                    </div>
+                    <div class="score-body">
+                        <div class="team">
+                            <div class="team-flag">🇮🇳</div>
+                            <span class="team-name">IND</span>
+                            <span class="team-score" id="score-team1">245/4</span>
+                        </div>
+                        <div class="score-divider">
+                            <span class="vs-text">VS</span>
+                            <span class="overs" id="score-overs">34.2 ov</span>
+                        </div>
+                        <div class="team">
+                            <div class="team-flag">🇦🇺</div>
+                            <span class="team-name">AUS</span>
+                            <span class="team-score" id="score-team2">Yet to bat</span>
+                        </div>
+                    </div>
+                    <div class="score-footer">
+                        <span class="score-event" id="score-event">🏏 Kohli hits a SIX! 87*(62)</span>
+                    </div>
+                </div>
+
+                <!-- Crowd Alert -->
+                <div class="alert-card" id="crowd-alert">
+                    <div class="alert-icon">
+                        <span class="material-symbols-rounded">warning</span>
+                    </div>
+                    <div class="alert-content">
+                        <p class="alert-title">Predictive Alert</p>
+                        <p class="alert-text" id="alert-text">Gate B will be crowded in ~10 mins. Consider using Gate D.
+                        </p>
+                    </div>
+                    <button class="alert-action" onclick="navigateToScreen('screen-map')">View</button>
+                </div>
+
+                <!-- Quick Actions -->
+                <h2 class="section-title">Quick Actions</h2>
+                <div class="quick-actions-grid">
+                    <button class="quick-action-card" onclick="navigateToScreen('screen-map')">
+                        <div class="qa-icon navigate-icon">
+                            <span class="material-symbols-rounded">navigation</span>
+                        </div>
+                        <span class="qa-label">Navigate</span>
+                        <span class="qa-sub">Find your seat</span>
+                    </button>
+                    <button class="quick-action-card" onclick="navigateToScreen('screen-order')">
+                        <div class="qa-icon food-icon">
+                            <span class="material-symbols-rounded">restaurant</span>
+                        </div>
+                        <span class="qa-label">Food</span>
+                        <span class="qa-sub">Pre-order now</span>
+                    </button>
+                    <button class="quick-action-card" onclick="openModal('washroom-modal')">
+                        <div class="qa-icon washroom-icon">
+                            <span class="material-symbols-rounded">wc</span>
+                        </div>
+                        <span class="qa-label">Washroom</span>
+                        <span class="qa-sub">3 nearby</span>
+                    </button>
+                    <button class="quick-action-card" onclick="openModal('parking-modal')">
+                        <div class="qa-icon parking-icon">
+                            <span class="material-symbols-rounded">local_parking</span>
+                        </div>
+                        <span class="qa-label">Parking</span>
+                        <span class="qa-sub">Spot B-24</span>
+                    </button>
+                </div>
+
+                <!-- Friends Nearby -->
+                <h2 class="section-title">Friends Nearby</h2>
+                <div class="friends-list">
+                    <div class="friend-card" onclick="showFriendOnMap('rahul')">
+                        <div class="friend-avatar" style="background: linear-gradient(135deg, #7c4dff, #448aff);">R
+                        </div>
+                        <div class="friend-info">
+                            <span class="friend-name">Rahul Sharma</span>
+                            <span class="friend-location">Section A, Row 12 • 45m away</span>
+                        </div>
+                        <button class="friend-nav-btn"><span class="material-symbols-rounded">near_me</span></button>
+                    </div>
+                    <div class="friend-card" onclick="showFriendOnMap('priya')">
+                        <div class="friend-avatar" style="background: linear-gradient(135deg, #ff6d00, #ff9100);">P
+                        </div>
+                        <div class="friend-info">
+                            <span class="friend-name">Priya Patel</span>
+                            <span class="friend-location">Food Court 2 • 120m away</span>
+                        </div>
+                        <button class="friend-nav-btn"><span class="material-symbols-rounded">near_me</span></button>
+                    </div>
+                    <div class="friend-card" onclick="showFriendOnMap('amit')">
+                        <div class="friend-avatar" style="background: linear-gradient(135deg, #00e676, #69f0ae);">A
+                        </div>
+                        <div class="friend-info">
+                            <span class="friend-name">Amit Kumar</span>
+                            <span class="friend-location">Gate C Entrance • 200m away</span>
+                        </div>
+                        <button class="friend-nav-btn"><span class="material-symbols-rounded">near_me</span></button>
+                    </div>
+                </div>
+
+                <!-- Emergency Button -->
+                <button class="emergency-btn" id="emergency-btn" onclick="openModal('emergency-modal')">
+                    <span class="material-symbols-rounded">emergency</span>
+                    <span>Emergency SOS</span>
+                </button>
+
+                <!-- Your Ticket -->
+                <h2 class="section-title">Your Ticket</h2>
+                <div class="ticket-card">
+                    <div class="ticket-info">
+                        <div class="ticket-detail">
+                            <span class="ticket-label">Section</span>
+                            <span class="ticket-value">B</span>
+                        </div>
+                        <div class="ticket-divider"></div>
+                        <div class="ticket-detail">
+                            <span class="ticket-label">Row</span>
+                            <span class="ticket-value">14</span>
+                        </div>
+                        <div class="ticket-divider"></div>
+                        <div class="ticket-detail">
+                            <span class="ticket-label">Seat</span>
+                            <span class="ticket-value">7</span>
+                        </div>
+                        <div class="ticket-divider"></div>
+                        <div class="ticket-detail">
+                            <span class="ticket-label">Gate</span>
+                            <span class="ticket-value">B2</span>
+                        </div>
+                    </div>
+                    <button class="ticket-navigate-btn" onclick="navigateToSeat()">
+                        <span class="material-symbols-rounded">directions</span> Navigate to Seat
+                    </button>
+                </div>
+                <div class="bottom-spacer"></div>
+            </div>
+        </section>
+
+        <!-- =============== MAP SCREEN =============== -->
+        <section id="screen-map" class="screen">
+            <div class="screen-content map-screen-content">
+                <header class="map-header">
+                    <div class="map-header-top">
+                        <div class="map-search-bar" id="map-search" onclick="openModal('map-search-modal')">
+                            <span class="material-symbols-rounded">search</span>
+                            <span class="search-placeholder">Search destination...</span>
+                        </div>
+                    </div>
+                    <!-- Map Mode Toggle -->
+                    <div class="map-mode-toggle" id="map-mode-toggle">
+                        <button class="mode-btn active" id="mode-info-btn" onclick="switchMapMode('info')">
+                            <span class="material-symbols-rounded">map</span>
+                            Stadium Info
+                        </button>
+                        <button class="mode-btn" id="mode-heat-btn" onclick="switchMapMode('heatmap')">
+                            <span class="material-symbols-rounded">thermostat</span>
+                            Crowd Heatmap
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Stadium Map SVG -->
+                <div class="map-container" id="map-container">
+                    <svg id="stadium-map" viewBox="0 0 800 700" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="heatGreen" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#00e676;stop-opacity:0.5" />
+                                <stop offset="100%" style="stop-color:#00e676;stop-opacity:0" />
+                            </radialGradient>
+                            <radialGradient id="heatYellow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#ffeb3b;stop-opacity:0.5" />
+                                <stop offset="100%" style="stop-color:#ffeb3b;stop-opacity:0" />
+                            </radialGradient>
+                            <radialGradient id="heatOrange" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#ff9100;stop-opacity:0.55" />
+                                <stop offset="100%" style="stop-color:#ff9100;stop-opacity:0" />
+                            </radialGradient>
+                            <radialGradient id="heatRed" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" style="stop-color:#ff1744;stop-opacity:0.6" />
+                                <stop offset="100%" style="stop-color:#ff1744;stop-opacity:0" />
+                            </radialGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                            <filter id="softGlow">
+                                <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        <!-- Stadium Outer Ring -->
+                        <ellipse cx="400" cy="350" rx="370" ry="300" fill="none" stroke="#1e2a3a" stroke-width="2" />
+
+                        <!-- Seating Sections -->
+                        <path d="M 150 150 A 370 300 0 0 1 650 150 L 580 220 A 270 200 0 0 0 220 220 Z" fill="#0d1a2d"
+                            stroke="#1e2a3a" stroke-width="1" class="section" data-section="A"
+                            onclick="selectMapPOI('section-a')" />
+                        <path d="M 650 150 A 370 300 0 0 1 700 550 L 610 470 A 270 200 0 0 0 580 220 Z" fill="#0d1a2d"
+                            stroke="#1e2a3a" stroke-width="1" class="section" data-section="B"
+                            onclick="selectMapPOI('section-b')" />
+                        <path d="M 700 550 A 370 300 0 0 1 100 550 L 190 470 A 270 200 0 0 0 610 470 Z" fill="#0d1a2d"
+                            stroke="#1e2a3a" stroke-width="1" class="section" data-section="C"
+                            onclick="selectMapPOI('section-c')" />
+                        <path d="M 100 550 A 370 300 0 0 1 150 150 L 220 220 A 270 200 0 0 0 190 470 Z" fill="#0d1a2d"
+                            stroke="#1e2a3a" stroke-width="1" class="section" data-section="D"
+                            onclick="selectMapPOI('section-d')" />
+
+                        <!-- Inner Concourse Ring (walkway) -->
+                        <ellipse class="concourse-ring" cx="400" cy="350" rx="270" ry="210" fill="none" stroke="#1a2535" stroke-width="14" stroke-dasharray="2 0" opacity="0.5" />
+
+                        <!-- Inner Field -->
+                        <ellipse cx="400" cy="350" rx="180" ry="140" fill="#0a1e0a" stroke="#1a3a1a"
+                            stroke-width="1.5" />
+                        <rect x="380" y="280" width="40" height="140" rx="4" fill="#1a2e1a" stroke="#2a4a2a"
+                            stroke-width="0.5" />
+
+                        <!-- ===== INFO MODE LAYER ===== -->
+                        <g id="info-layer">
+                            <!-- Section Labels -->
+                            <text x="400" y="175" text-anchor="middle" fill="#7a8a9a" font-size="15" font-weight="700"
+                                font-family="Inter">NORTH STAND</text>
+                            <text x="400" y="193" text-anchor="middle" fill="#4d5d6d" font-size="11"
+                                font-family="Inter">Section A • Rows 1-30</text>
+                            <text x="660" y="355" text-anchor="middle" fill="#7a8a9a" font-size="13" font-weight="700"
+                                font-family="Inter" transform="rotate(90, 660, 355)">EAST STAND</text>
+                            <text x="640" y="380" text-anchor="middle" fill="#4d5d6d" font-size="9"
+                                font-family="Inter" transform="rotate(90, 640, 380)">Section B</text>
+                            <text x="400" y="520" text-anchor="middle" fill="#7a8a9a" font-size="15" font-weight="700"
+                                font-family="Inter">SOUTH STAND</text>
+                            <text x="400" y="538" text-anchor="middle" fill="#4d5d6d" font-size="11"
+                                font-family="Inter">Section C • Rows 1-30</text>
+                            <text x="140" y="355" text-anchor="middle" fill="#7a8a9a" font-size="13" font-weight="700"
+                                font-family="Inter" transform="rotate(-90, 140, 355)">WEST STAND</text>
+                            <text x="160" y="380" text-anchor="middle" fill="#4d5d6d" font-size="9"
+                                font-family="Inter" transform="rotate(-90, 160, 380)">Section D</text>
+
+                            <!-- Gate Markers -->
+                            <g class="gate-marker" onclick="selectMapPOI('gate-a')">
+                                <circle cx="400" cy="55" r="18" fill="#0d1525" stroke="#448aff" stroke-width="2.5" />
+                                <text x="400" y="49" text-anchor="middle" fill="#8892b0" font-size="8"
+                                    font-family="Inter">GATE</text>
+                                <text x="400" y="63" text-anchor="middle" fill="#448aff" font-size="13" font-weight="800"
+                                    font-family="Inter">A</text>
+                            </g>
+                            <g class="gate-marker" onclick="selectMapPOI('gate-b')">
+                                <circle cx="765" cy="350" r="18" fill="#0d1525" stroke="#448aff" stroke-width="2.5" />
+                                <text x="765" y="344" text-anchor="middle" fill="#8892b0" font-size="8"
+                                    font-family="Inter">GATE</text>
+                                <text x="765" y="358" text-anchor="middle" fill="#448aff" font-size="13" font-weight="800"
+                                    font-family="Inter">B</text>
+                            </g>
+                            <g class="gate-marker" onclick="selectMapPOI('gate-c')">
+                                <circle cx="400" cy="645" r="18" fill="#0d1525" stroke="#448aff" stroke-width="2.5" />
+                                <text x="400" y="639" text-anchor="middle" fill="#8892b0" font-size="8"
+                                    font-family="Inter">GATE</text>
+                                <text x="400" y="653" text-anchor="middle" fill="#448aff" font-size="13" font-weight="800"
+                                    font-family="Inter">C</text>
+                            </g>
+                            <g class="gate-marker" onclick="selectMapPOI('gate-d')">
+                                <circle cx="35" cy="350" r="18" fill="#0d1525" stroke="#448aff" stroke-width="2.5" />
+                                <text x="35" y="344" text-anchor="middle" fill="#8892b0" font-size="8"
+                                    font-family="Inter">GATE</text>
+                                <text x="35" y="358" text-anchor="middle" fill="#448aff" font-size="13" font-weight="800"
+                                    font-family="Inter">D</text>
+                            </g>
+
+                            <!-- POI - Food Courts -->
+                            <g class="poi-marker" onclick="selectMapPOI('food-1')">
+                                <circle cx="280" cy="140" r="16" fill="#ff6d00" filter="url(#softGlow)" />
+                                <text x="280" y="145" text-anchor="middle" fill="white" font-size="14">🍔</text>
+                                <text x="280" y="165" text-anchor="middle" fill="#b0b8c8" font-size="9" font-family="Inter">Food 1</text>
+                            </g>
+                            <g class="poi-marker" onclick="selectMapPOI('food-2')">
+                                <circle cx="620" cy="480" r="16" fill="#ff6d00" filter="url(#softGlow)" />
+                                <text x="620" y="485" text-anchor="middle" fill="white" font-size="14">🍕</text>
+                                <text x="620" y="505" text-anchor="middle" fill="#b0b8c8" font-size="9" font-family="Inter">Food 2</text>
+                            </g>
+
+                            <!-- POI - Washrooms -->
+                            <g class="poi-marker" onclick="selectMapPOI('washroom-1')">
+                                <circle cx="190" cy="200" r="14" fill="#7c4dff" filter="url(#softGlow)" />
+                                <text x="190" y="205" text-anchor="middle" fill="white" font-size="12">🚻</text>
+                                <text x="190" y="223" text-anchor="middle" fill="#b0b8c8" font-size="8" font-family="Inter">WR 1</text>
+                            </g>
+                            <g class="poi-marker" onclick="selectMapPOI('washroom-2')">
+                                <circle cx="620" cy="220" r="14" fill="#7c4dff" filter="url(#softGlow)" />
+                                <text x="620" y="225" text-anchor="middle" fill="white" font-size="12">🚻</text>
+                                <text x="620" y="243" text-anchor="middle" fill="#b0b8c8" font-size="8" font-family="Inter">WR 2</text>
+                            </g>
+                            <g class="poi-marker" onclick="selectMapPOI('washroom-3')">
+                                <circle cx="530" cy="540" r="14" fill="#7c4dff" filter="url(#softGlow)" />
+                                <text x="530" y="545" text-anchor="middle" fill="white" font-size="12">🚻</text>
+                                <text x="530" y="563" text-anchor="middle" fill="#b0b8c8" font-size="8" font-family="Inter">WR 3</text>
+                            </g>
+                            <g class="poi-marker" onclick="selectMapPOI('washroom-4')">
+                                <circle cx="200" cy="470" r="14" fill="#7c4dff" filter="url(#softGlow)" />
+                                <text x="200" y="475" text-anchor="middle" fill="white" font-size="12">🚻</text>
+                                <text x="200" y="493" text-anchor="middle" fill="#b0b8c8" font-size="8" font-family="Inter">WR 4</text>
+                            </g>
+
+                            <!-- POI - Exits / Emergency -->
+                            <g class="poi-marker" onclick="selectMapPOI('exit-north')">
+                                <circle cx="300" cy="95" r="12" fill="#00bfa5" filter="url(#softGlow)" />
+                                <text x="300" y="100" text-anchor="middle" fill="white" font-size="11">🚪</text>
+                            </g>
+                            <g class="poi-marker" onclick="selectMapPOI('exit-south')">
+                                <circle cx="500" cy="600" r="12" fill="#00bfa5" filter="url(#softGlow)" />
+                                <text x="500" y="605" text-anchor="middle" fill="white" font-size="11">🚪</text>
+                            </g>
+
+                            <!-- POI - Parking -->
+                            <g class="poi-marker" onclick="selectMapPOI('parking-a')">
+                                <circle cx="250" cy="75" r="13" fill="#448aff" filter="url(#softGlow)" />
+                                <text x="250" y="80" text-anchor="middle" fill="white" font-size="11">🅿️</text>
+                                <text x="250" y="97" text-anchor="middle" fill="#b0b8c8" font-size="8" font-family="Inter">Parking A</text>
+                            </g>
+                            <g class="poi-marker" onclick="selectMapPOI('parking-b')">
+                                <circle cx="560" cy="610" r="13" fill="#448aff" filter="url(#softGlow)" />
+                                <text x="560" y="615" text-anchor="middle" fill="white" font-size="11">🅿️</text>
+                                <text x="560" y="632" text-anchor="middle" fill="#b0b8c8" font-size="8" font-family="Inter">Parking B</text>
+                            </g>
+
+                            <!-- POI - Medical -->
+                            <g class="poi-marker" onclick="selectMapPOI('medical')">
+                                <circle cx="340" cy="100" r="12" fill="#ff1744" filter="url(#softGlow)" />
+                                <text x="340" y="105" text-anchor="middle" fill="white" font-size="11">🏥</text>
+                            </g>
+                        </g>
+
+                        <!-- ===== HEATMAP MODE LAYER ===== -->
+                        <g id="heatmap-layer" style="display:none;">
+                            <ellipse class="heatmap-zone" cx="400" cy="170" rx="150" ry="70" fill="url(#heatGreen)" />
+                            <ellipse class="heatmap-zone" cx="680" cy="340" rx="90" ry="130" fill="url(#heatRed)" />
+                            <ellipse class="heatmap-zone" cx="400" cy="530" rx="150" ry="70" fill="url(#heatOrange)" />
+                            <ellipse class="heatmap-zone" cx="130" cy="340" rx="80" ry="120" fill="url(#heatYellow)" />
+                            <!-- Additional density zones -->
+                            <ellipse class="heatmap-zone" cx="550" cy="200" rx="80" ry="50" fill="url(#heatOrange)" />
+                            <ellipse class="heatmap-zone" cx="250" cy="450" rx="70" ry="60" fill="url(#heatGreen)" />
+                            <!-- Density labels -->
+                            <text x="400" y="175" text-anchor="middle" fill="#7fff7f" font-size="13" font-weight="700" font-family="Inter" opacity="0.9">LOW</text>
+                            <text x="680" y="345" text-anchor="middle" fill="#ff5555" font-size="13" font-weight="700" font-family="Inter" opacity="0.9">VERY HIGH</text>
+                            <text x="400" y="535" text-anchor="middle" fill="#ffaa33" font-size="13" font-weight="700" font-family="Inter" opacity="0.9">HIGH</text>
+                            <text x="130" y="345" text-anchor="middle" fill="#ffee55" font-size="13" font-weight="700" font-family="Inter" opacity="0.9">MEDIUM</text>
+                            <text x="550" y="205" text-anchor="middle" fill="#ffaa33" font-size="11" font-weight="600" font-family="Inter" opacity="0.8">MODERATE</text>
+                            <text x="250" y="455" text-anchor="middle" fill="#7fff7f" font-size="11" font-weight="600" font-family="Inter" opacity="0.8">LOW</text>
+                            <!-- Simplified gate references in heatmap -->
+                            <text x="400" y="60" text-anchor="middle" fill="#448aff" font-size="10" font-weight="700" font-family="Inter">Gate A</text>
+                            <text x="760" y="355" text-anchor="middle" fill="#448aff" font-size="10" font-weight="700" font-family="Inter">Gate B</text>
+                            <text x="400" y="650" text-anchor="middle" fill="#448aff" font-size="10" font-weight="700" font-family="Inter">Gate C</text>
+                            <text x="40" y="355" text-anchor="middle" fill="#448aff" font-size="10" font-weight="700" font-family="Inter">Gate D</text>
+                        </g>
+
+                        <!-- Friend Markers (Real-time tracking) -->
+                        <g id="friends-layer">
+                            <g class="friend-marker" id="friend-rahul" onclick="showFriendOnMap('rahul')">
+                                <circle class="friend-ring" cx="350" cy="185" r="16" fill="none" stroke="#7c4dff" stroke-width="2" />
+                                <circle class="friend-dot" cx="350" cy="185" r="16" fill="#7c4dff" stroke="white" stroke-width="2" filter="url(#glow)" />
+                                <text class="friend-text" x="350" y="190" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="Inter">R</text>
+                            </g>
+                            <g class="friend-marker" id="friend-priya" onclick="showFriendOnMap('priya')">
+                                <circle class="friend-ring" cx="600" cy="470" r="16" fill="none" stroke="#ff6d00" stroke-width="2" />
+                                <circle class="friend-dot" cx="600" cy="470" r="16" fill="#ff6d00" stroke="white" stroke-width="2" filter="url(#glow)" />
+                                <text class="friend-text" x="600" y="475" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="Inter">P</text>
+                            </g>
+                            <g class="friend-marker" id="friend-amit" onclick="showFriendOnMap('amit')">
+                                <circle class="friend-ring" cx="100" cy="380" r="16" fill="none" stroke="#00e676" stroke-width="2" />
+                                <circle class="friend-dot" cx="100" cy="380" r="16" fill="#00e676" stroke="white" stroke-width="2" filter="url(#glow)" />
+                                <text class="friend-text" x="100" y="385" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="Inter">A</text>
+                            </g>
+                        </g>
+
+                        <!-- Navigation Routes (hidden by default) -->
+                        <g id="nav-routes-layer">
+                            <path id="nav-route-1" d="" fill="none" stroke="#00e676" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0" class="nav-route-path" />
+                            <path id="nav-route-2" d="" fill="none" stroke="#448aff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 5" opacity="0" class="nav-route-alt" />
+                            <path id="nav-route-3" d="" fill="none" stroke="#ff9100" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 6" opacity="0" class="nav-route-alt" />
+                            <!-- Destination Pin -->
+                            <g id="nav-dest-pin" style="display:none;">
+                                <circle id="nav-dest-pulse" cx="0" cy="0" r="18" fill="rgba(0,230,118,0.15)" class="dest-pulse" />
+                                <circle id="nav-dest-dot" cx="0" cy="0" r="8" fill="#ff1744" stroke="white" stroke-width="2" />
+                            </g>
+                        </g>
+
+                        <!-- User Position (in North Stand concourse, NOT on field) -->
+                        <g id="user-marker" class="user-marker">
+                            <circle cx="480" cy="195" r="24" fill="rgba(0,230,118,0.12)" class="user-pulse" />
+                            <circle cx="480" cy="195" r="11" fill="#00e676" stroke="white" stroke-width="2.5"
+                                filter="url(#glow)" />
+                            <circle cx="480" cy="195" r="4" fill="white" />
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- POI Info Card (appears on tap) -->
+                <div class="poi-info-card" id="poi-info-card">
+                    <div class="poi-card-header">
+                        <div class="poi-card-icon" id="poi-card-icon">🍔</div>
+                        <div class="poi-card-details">
+                            <span class="poi-card-name" id="poi-card-name">Food Court 1</span>
+                            <span class="poi-card-sub" id="poi-card-sub">North Stand • ~4 min walk</span>
+                        </div>
+                        <button class="poi-card-close" onclick="closePOICard()">
+                            <span class="material-symbols-rounded">close</span>
+                        </button>
+                    </div>
+                    <div class="poi-card-meta" id="poi-card-meta">
+                        <span class="poi-meta-tag"><span class="material-symbols-rounded">schedule</span>~4 min</span>
+                        <span class="poi-meta-tag"><span class="material-symbols-rounded">straighten</span>280m</span>
+                        <span class="poi-meta-tag crowd-low"><span class="material-symbols-rounded">group</span>Low crowd</span>
+                    </div>
+                    <button class="poi-navigate-btn" id="poi-navigate-btn" onclick="navigateFromPOICard()">
+                        <span class="material-symbols-rounded">navigation</span>
+                        Navigate Here
+                    </button>
+                </div>
+
+                <!-- Map Legend (mode-aware) -->
+                <div class="map-legend" id="map-legend">
+                    <span class="legend-title" id="legend-title">Points of Interest</span>
+                    <div class="legend-items" id="legend-items">
+                        <span class="legend-item"><span class="legend-dot" style="background:#ff6d00"></span>Food</span>
+                        <span class="legend-item"><span class="legend-dot" style="background:#7c4dff"></span>WC</span>
+                        <span class="legend-item"><span class="legend-dot" style="background:#448aff"></span>Gate</span>
+                        <span class="legend-item"><span class="legend-dot" style="background:#00e676"></span>You</span>
+                    </div>
+                </div>
+
+                <!-- Quick Action FABs -->
+                <div class="map-quick-actions" id="map-quick-actions">
+                    <button class="map-quick-btn" onclick="quickNavigate('washroom')" title="Find Washroom">
+                        <span class="material-symbols-rounded">wc</span>
+                        <span class="quick-label">Washroom</span>
+                    </button>
+                    <button class="map-quick-btn" onclick="quickNavigate('food')" title="Find Food">
+                        <span class="material-symbols-rounded">restaurant</span>
+                        <span class="quick-label">Food</span>
+                    </button>
+                    <button class="map-quick-btn" onclick="quickNavigate('seat')" title="Go to Seat">
+                        <span class="material-symbols-rounded">event_seat</span>
+                        <span class="quick-label">My Seat</span>
+                    </button>
+                    <button class="map-quick-btn" onclick="quickNavigate('exit')" title="Find Exit">
+                        <span class="material-symbols-rounded">exit_to_app</span>
+                        <span class="quick-label">Exit</span>
+                    </button>
+                </div>
+
+                <!-- Map FABs -->
+                <div class="map-fab-group">
+                    <button class="map-fab" onclick="centerOnUser()" title="My Location">
+                        <span class="material-symbols-rounded">my_location</span>
+                    </button>
+                    <button class="map-fab" onclick="toggleFriends()" title="Show Friends">
+                        <span class="material-symbols-rounded">group</span>
+                    </button>
+                    <button class="map-fab primary-fab" onclick="openNavPanel()" title="Navigate">
+                        <span class="material-symbols-rounded">directions</span>
+                    </button>
+                </div>
+
+                <!-- Route Options Panel -->
+                <div class="route-options-panel" id="route-options-panel">
+                    <div class="route-panel-handle" onclick="closeRouteOptions()"></div>
+                    <h3 class="route-panel-title">
+                        <span class="material-symbols-rounded">route</span>
+                        Choose Route
+                    </h3>
+                    <div class="route-options-list" id="route-options-list">
+                        <!-- Populated by JS -->
+                    </div>
+                    <button class="route-cancel-btn" onclick="closeRouteOptions()">Cancel</button>
+                </div>
+
+                <!-- Navigation Panel -->
+                <div class="nav-panel" id="nav-panel">
+                    <div class="nav-panel-handle" onclick="toggleNavPanel()"></div>
+                    <h3 class="nav-panel-title">Navigate To</h3>
+                    <div class="nav-destinations">
+                        <button class="nav-dest-btn" onclick="triggerNavigation('seat')">
+                            <span class="material-symbols-rounded">event_seat</span>
+                            <div><span class="dest-name">My Seat (B14-7)</span><span class="dest-info">~2 min walk • Low
+                                    crowd</span></div>
+                            <span class="material-symbols-rounded dest-arrow">chevron_right</span>
+                        </button>
+                        <button class="nav-dest-btn" onclick="triggerNavigation('food1')">
+                            <span class="material-symbols-rounded">restaurant</span>
+                            <div><span class="dest-name">Food Court 1</span><span class="dest-info">~4 min walk •
+                                    Moderate crowd</span></div>
+                            <span class="material-symbols-rounded dest-arrow">chevron_right</span>
+                        </button>
+                        <button class="nav-dest-btn" onclick="triggerNavigation('food2')">
+                            <span class="material-symbols-rounded">restaurant</span>
+                            <div><span class="dest-name">Food Court 2</span><span class="dest-info">~6 min walk •
+                                    Busy</span></div>
+                            <span class="material-symbols-rounded dest-arrow">chevron_right</span>
+                        </button>
+                        <button class="nav-dest-btn" onclick="triggerNavigation('washroom1')">
+                            <span class="material-symbols-rounded">wc</span>
+                            <div><span class="dest-name">Washroom 1 – North</span><span class="dest-info">~1 min walk •
+                                    Available</span></div>
+                            <span class="material-symbols-rounded dest-arrow">chevron_right</span>
+                        </button>
+                        <button class="nav-dest-btn" onclick="triggerNavigation('washroom2')">
+                            <span class="material-symbols-rounded">wc</span>
+                            <div><span class="dest-name">Washroom 2 – East</span><span class="dest-info">~3 min walk •
+                                    Moderate</span></div>
+                            <span class="material-symbols-rounded dest-arrow">chevron_right</span>
+                        </button>
+                        <button class="nav-dest-btn" onclick="triggerNavigation('washroom3')">
+                            <span class="material-symbols-rounded">wc</span>
+                            <div><span class="dest-name">Washroom 3 – South</span><span class="dest-info">~5 min walk •
+                                    Busy</span></div>
+                            <span class="material-symbols-rounded dest-arrow">chevron_right</span>
+                        </button>
+                        <button class="nav-dest-btn" onclick="triggerNavigation('washroom4')">
+                            <span class="material-symbols-rounded">wc</span>
+                            <div><span class="dest-name">Washroom 4 – West</span><span class="dest-info">~4 min walk •
+                                    Available</span></div>
+                            <span class="material-symbols-rounded dest-arrow">chevron_right</span>
+                        </button>
+                        <button class="nav-dest-btn" onclick="triggerNavigation('gateA')">
+                            <span class="material-symbols-rounded">door_front</span>
+                            <div><span class="dest-name">Gate A (North)</span><span class="dest-info">~2 min walk •
+                                    Low crowd</span></div>
+                            <span class="material-symbols-rounded dest-arrow">chevron_right</span>
+                        </button>
+                        <button class="nav-dest-btn" onclick="triggerNavigation('gateD')">
+                            <span class="material-symbols-rounded">door_front</span>
+                            <div><span class="dest-name">Gate D (West)</span><span class="dest-info">~3 min walk •
+                                    Low crowd</span></div>
+                            <span class="material-symbols-rounded dest-arrow">chevron_right</span>
+                        </button>
+                        <button class="nav-dest-btn" onclick="triggerNavigation('parking')">
+                            <span class="material-symbols-rounded">local_parking</span>
+                            <div><span class="dest-name">Parking Spot B-24</span><span class="dest-info">~6 min walk •
+                                    Through Gate C</span></div>
+                            <span class="material-symbols-rounded dest-arrow">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Active Navigation Bar -->
+                <div class="active-nav-bar" id="active-nav-bar">
+                    <div class="nav-bar-info">
+                        <span class="material-symbols-rounded nav-bar-icon">navigation</span>
+                        <div>
+                            <span class="nav-bar-dest" id="nav-bar-dest">My Seat</span>
+                            <span class="nav-bar-eta" id="nav-bar-eta">2 min • 150m</span>
+                        </div>
+                    </div>
+                    <div class="nav-bar-actions">
+                        <button class="nav-bar-routes-btn" onclick="showRouteSwitch()" title="Change route">
+                            <span class="material-symbols-rounded">alt_route</span>
+                        </button>
+                        <button class="nav-bar-close" onclick="stopNavigation()">
+                            <span class="material-symbols-rounded">close</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============== ORDER SCREEN =============== -->
+        <section id="screen-order" class="screen">
+            <div class="screen-content">
+                <header class="screen-header">
+                    <h1 class="screen-title">Order Food</h1>
+                    <button class="icon-btn cart-btn" id="cart-btn" onclick="openModal('cart-modal')">
+                        <span class="material-symbols-rounded">shopping_cart</span>
+                        <span class="cart-badge" id="cart-badge">0</span>
+                    </button>
+                </header>
+
+                <div class="smart-suggestion">
+                    <span class="material-symbols-rounded">lightbulb</span>
+                    <p><strong>Smart Tip:</strong> Food Court 1 has the shortest wait (~3 min)</p>
+                </div>
+
+                <div class="order-search">
+                    <span class="material-symbols-rounded">search</span>
+                    <input type="text" placeholder="Search food & drinks..." id="food-search"
+                        oninput="filterFood(this.value)">
+                </div>
+
+                <div class="food-categories" id="food-categories">
+                    <button class="cat-btn active" onclick="filterCategory('all', this)">All</button>
+                    <button class="cat-btn" onclick="filterCategory('snacks', this)">🍿 Snacks</button>
+                    <button class="cat-btn" onclick="filterCategory('meals', this)">🍛 Meals</button>
+                    <button class="cat-btn" onclick="filterCategory('drinks', this)">🥤 Drinks</button>
+                    <button class="cat-btn" onclick="filterCategory('desserts', this)">🍦 Desserts</button>
+                </div>
+
+                <div class="food-grid" id="food-grid">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Active Order Status -->
+                <div class="order-status-card" id="order-status" style="display:none;">
+                    <div class="order-status-header">
+                        <span class="material-symbols-rounded">receipt_long</span>
+                        <span>Active Order</span>
+                    </div>
+                    <div class="order-status-body">
+                        <div class="order-progress">
+                            <div class="progress-step completed">
+                                <div class="step-dot"></div><span>Confirmed</span>
+                            </div>
+                            <div class="progress-line completed"></div>
+                            <div class="progress-step active">
+                                <div class="step-dot"></div><span>Preparing</span>
+                            </div>
+                            <div class="progress-line"></div>
+                            <div class="progress-step">
+                                <div class="step-dot"></div><span>Ready</span>
+                            </div>
+                        </div>
+                        <p class="order-eta">Your order will be ready in <strong id="order-eta-time">5 minutes</strong>
+                        </p>
+                        <p class="order-pickup">Pickup at <strong>Food Court 1, Counter 3</strong></p>
+                    </div>
+                </div>
+                <div class="bottom-spacer"></div>
+            </div>
+        </section>
+
+        <!-- =============== ASSISTANT SCREEN =============== -->
+        <section id="screen-assistant" class="screen">
+            <div class="screen-content assistant-content">
+                <header class="screen-header assistant-header">
+                    <div class="assistant-avatar"><span class="material-symbols-rounded">smart_toy</span></div>
+                    <div>
+                        <h1 class="screen-title">ARENA AI</h1>
+                        <span class="assistant-status">● Online • Ready to help</span>
+                    </div>
+                </header>
+
+                <div class="chat-container" id="chat-container">
+                    <!-- Dynamic content will be injected by initAssistant() -->
+                </div>
+
+                <div class="chat-suggestions" id="chat-suggestions" style="display: none;">
+                    <!-- Suggesions are now handled within the guided flow -->
+                </div>
+
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Ask ARENA AI anything..."
+                        onkeydown="handleChatKey(event)">
+                    <button class="chat-send-btn" id="chat-send-btn" onclick="sendChatMessage()">
+                        <span class="material-symbols-rounded">send</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============== PROFILE SCREEN =============== -->
+        <section id="screen-profile" class="screen">
+            <div class="screen-content">
+                <header class="screen-header">
+                    <h1 class="screen-title">Profile</h1>
+                </header>
+
+                <div class="profile-card">
+                    <div class="profile-avatar"><span>AK</span></div>
+                    <h2 class="profile-name">Aryan Kumar</h2>
+                    <p class="profile-email">aryan.kumar@email.com</p>
+                    <div class="profile-stats">
+                        <div class="stat"><span class="stat-value">12</span><span class="stat-label">Events</span></div>
+                        <div class="stat-divider"></div>
+                        <div class="stat"><span class="stat-value">3</span><span class="stat-label">Friends</span></div>
+                        <div class="stat-divider"></div>
+                        <div class="stat"><span class="stat-value">⭐ 4.8</span><span class="stat-label">Rating</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-title">Current Event</h2>
+                <div class="event-card">
+                    <div class="event-badge">LIVE</div>
+                    <h3 class="event-name">IND vs AUS • ICC CWC 2026</h3>
+                    <p class="event-venue">Narendra Modi Stadium, Ahmedabad</p>
+                    <p class="event-date">📅 April 13, 2026 • 2:00 PM IST</p>
+                </div>
+
+                <div class="profile-menu">
+                    <button class="menu-item" onclick="handleProfileMenu('tickets')">
+                        <span class="material-symbols-rounded">confirmation_number</span>
+                        <span>My Tickets</span>
+                        <span class="material-symbols-rounded menu-arrow">chevron_right</span>
+                    </button>
+                    <button class="menu-item" onclick="handleProfileMenu('orders')">
+                        <span class="material-symbols-rounded">receipt_long</span>
+                        <span>Order History</span>
+                        <span class="material-symbols-rounded menu-arrow">chevron_right</span>
+                    </button>
+                    <button class="menu-item" onclick="handleProfileMenu('friends')">
+                        <span class="material-symbols-rounded">group</span>
+                        <span>My Friends</span>
+                        <span class="material-symbols-rounded menu-arrow">chevron_right</span>
+                    </button>
+                    <button class="menu-item" onclick="handleProfileMenu('parking')">
+                        <span class="material-symbols-rounded">directions_car</span>
+                        <span>Saved Parking</span>
+                        <span class="material-symbols-rounded menu-arrow">chevron_right</span>
+                    </button>
+                    <button class="menu-item" onclick="handleProfileMenu('help')">
+                        <span class="material-symbols-rounded">help</span>
+                        <span>Help & Support</span>
+                        <span class="material-symbols-rounded menu-arrow">chevron_right</span>
+                    </button>
+                    <button class="menu-item danger" onclick="handleProfileMenu('logout')">
+                        <span class="material-symbols-rounded">logout</span>
+                        <span>Sign Out</span>
+                        <span class="material-symbols-rounded menu-arrow">chevron_right</span>
+                    </button>
+                </div>
+                <p class="app-version">ARENA v2.0.1 • Made with ❤️ for sports fans</p>
+                <div class="bottom-spacer"></div>
+            </div>
+        </section>
+
+        <!-- =============== TICKETS LIST SCREEN =============== -->
+        <section id="screen-tickets" class="screen">
+            <div class="screen-content">
+                <header class="screen-header">
+                    <button class="icon-btn" onclick="navigateToScreen('screen-profile')">
+                        <span class="material-symbols-rounded">arrow_back</span>
+                    </button>
+                    <h1 class="screen-title">My Tickets</h1>
+                    <div style="width: 40px;"></div>
+                </header>
+
+                <div class="tickets-container">
+                    <p class="tickets-subtitle">Active Tickets (2)</p>
+                    <div id="tickets-list" class="tickets-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="ticket-help-card">
+                    <span class="material-symbols-rounded">info</span>
+                    <p>Tickets are automatically synced with your account. Present the QR code at the stadium gate for entry.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============== TICKET DETAIL OVERLAY =============== -->
+        <div id="ticket-detail-screen" class="ticket-overlay">
+            <header class="ticket-overlay-header">
+                <button class="icon-btn" onclick="closeTicketDetail()">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+                <span class="overlay-title">Ticket Details</span>
+                <div style="width:40px"></div>
+            </header>
+            <div id="ticket-detail-content" class="ticket-detail-content">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- =============== ORDER HISTORY SCREEN =============== -->
+        <section id="screen-orders" class="screen">
+            <div class="screen-content">
+                <header class="screen-header">
+                    <button class="icon-btn" onclick="navigateToScreen('screen-profile')">
+                        <span class="material-symbols-rounded">arrow_back</span>
+                    </button>
+                    <h1 class="screen-title">Order History</h1>
+                    <div style="width: 40px;"></div>
+                </header>
+
+                <div id="orders-list" class="orders-list">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- =============== SAVED PARKING SCREEN =============== -->
+        <section id="screen-parking" class="screen">
+            <div class="screen-content">
+                <header class="screen-header">
+                    <button class="icon-btn" onclick="navigateToScreen('screen-profile')">
+                        <span class="material-symbols-rounded">arrow_back</span>
+                    </button>
+                    <h1 class="screen-title">Saved Parking</h1>
+                    <div style="width: 40px;"></div>
+                </header>
+
+                <div id="parking-content" class="parking-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- =============== HELP & SUPPORT SCREEN =============== -->
+        <section id="screen-help" class="screen">
+            <div class="screen-content">
+                <header class="screen-header">
+                    <button class="icon-btn" onclick="navigateToScreen('screen-profile')">
+                        <span class="material-symbols-rounded">arrow_back</span>
+                    </button>
+                    <h1 class="screen-title">Help & Support</h1>
+                    <div style="width: 40px;"></div>
+                </header>
+
+                <div class="help-container">
+                    <div class="help-section">
+                        <h2 class="section-title">Quick Help</h2>
+                        <div class="quick-help-grid">
+                            <button class="quick-help-btn" onclick="navigateToScreen('screen-map')">
+                                <span class="material-symbols-rounded">wc</span>
+                                <span>Find Washroom</span>
+                            </button>
+                            <button class="quick-help-btn" onclick="navigateToScreen('screen-map')">
+                                <span class="material-symbols-rounded">door_open</span>
+                                <span>Navigate to Exit</span>
+                            </button>
+                            <button class="quick-help-btn" onclick="navigateToScreen('screen-order')">
+                                <span class="material-symbols-rounded">restaurant</span>
+                                <span>Order Food</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="help-section">
+                        <h2 class="section-title">Common Questions</h2>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <button class="faq-question" onclick="toggleFAQ(this)">
+                                    <span>How do I find my seat?</span>
+                                    <span class="material-symbols-rounded">expand_more</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p>Go to the Map tab and select "My Seat" from the quick actions. The app will provide a real-time route to your exact block and row.</p>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question" onclick="toggleFAQ(this)">
+                                    <span>How to order food?</span>
+                                    <span class="material-symbols-rounded">expand_more</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p>Visit the Order tab, browse available stalls, add items to your cart, and pay. You'll get a notification when your order is ready for pickup.</p>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question" onclick="toggleFAQ(this)">
+                                    <span>How to navigate inside the stadium?</span>
+                                    <span class="material-symbols-rounded">expand_more</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p>Our integrated map uses your live location to guide you to any POI (Point of Interest). Simply search for a destination or tap an icon on the map.</p>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button class="faq-question" onclick="toggleFAQ(this)">
+                                    <span>How to contact support?</span>
+                                    <span class="material-symbols-rounded">expand_more</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <p>Use the "Contact Staff" or "Report Issue" buttons below. Our support team is available 24/7 during events to assist you.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="help-section">
+                        <h2 class="section-title">Contact Us</h2>
+                        <div class="contact-options">
+                            <button class="contact-btn primary" onclick="contactStaff()">
+                                <span class="material-symbols-rounded">support_agent</span>
+                                <span>Contact Stadium Staff</span>
+                            </button>
+                            <button class="contact-btn secondary" onclick="reportIssue()">
+                                <span class="material-symbols-rounded">report_problem</span>
+                                <span>Report an Issue</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============== ORDER DETAIL OVERLAY =============== -->
+        <div id="order-detail-screen" class="ticket-overlay">
+            <header class="ticket-overlay-header">
+                <button class="icon-btn" onclick="closeOrderDetail()">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+                <span class="overlay-title">Order Details</span>
+                <div style="width:40px"></div>
+            </header>
+            <div id="order-detail-content" class="ticket-detail-content">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- =============== FRIENDS SCREEN =============== -->
+        <section id="screen-friends" class="screen">
+            <div class="screen-content">
+                <header class="screen-header">
+                    <button class="icon-btn" onclick="navigateToScreen('screen-profile')">
+                        <span class="material-symbols-rounded">arrow_back</span>
+                    </button>
+                    <h1 class="screen-title">My Friends</h1>
+                    <button class="icon-btn" onclick="showAddFriendOptions()">
+                        <span class="material-symbols-rounded">person_add</span>
+                    </button>
+                </header>
+
+                <div id="friends-list-container" class="friends-list-premium">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- =============== ADD FRIEND MODAL (Now Scoped) =============== -->
+                <div id="add-friend-modal" class="modal-scoped">
+                    <div class="modal-scoped-overlay" onclick="closeAddFriend()"></div>
+                    <div class="modal-scoped-content">
+                        <div class="modal-scoped-header">
+                            <h2>Add New Friend</h2>
+                            <button class="modal-x-btn" onclick="closeAddFriend()">
+                                <span class="material-symbols-rounded">close</span>
+                            </button>
+                        </div>
+                        
+                        <div class="add-friend-form">
+                            <label for="friend-name-input" class="input-label">Friend's Name</label>
+                            <div class="input-wrapper">
+                                <span class="material-symbols-rounded">person</span>
+                                <input type="text" id="friend-name-input" placeholder="Enter friend name" autocomplete="off">
+                            </div>
+                            <p id="add-friend-error" class="error-text" style="display: none;">Please enter a name</p>
+                        </div>
+
+                        <p class="modal-subtitle">Suggested nearby</p>
+                        <div id="suggestion-list" class="suggestion-list">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <div class="modal-scoped-footer">
+                            <button class="modal-cancel-btn" onclick="closeAddFriend()">Cancel</button>
+                            <button class="modal-confirm-btn" onclick="processAddFriend()">Add Friend</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =============== BOTTOM NAVIGATION =============== -->
+        <nav class="bottom-nav" id="bottom-nav">
+            <button class="nav-tab active" data-screen="screen-home" onclick="navigateToScreen('screen-home', this)">
+                <span class="material-symbols-rounded">home</span>
+                <span class="nav-label">Home</span>
+            </button>
+            <button class="nav-tab" data-screen="screen-map" onclick="navigateToScreen('screen-map', this)">
+                <span class="material-symbols-rounded">map</span>
+                <span class="nav-label">Map</span>
+            </button>
+            <button class="nav-tab" data-screen="screen-order" onclick="navigateToScreen('screen-order', this)">
+                <span class="material-symbols-rounded">fastfood</span>
+                <span class="nav-label">Order</span>
+            </button>
+            <button class="nav-tab" data-screen="screen-assistant" onclick="navigateToScreen('screen-assistant', this)">
+                <span class="material-symbols-rounded">smart_toy</span>
+                <span class="nav-label">Assistant</span>
+            </button>
+            <button class="nav-tab" data-screen="screen-profile" onclick="navigateToScreen('screen-profile', this)">
+                <span class="material-symbols-rounded">person</span>
+                <span class="nav-label">Profile</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- ======================== MODALS ======================== -->
+
+    <!-- Emergency Modal -->
+    <div class="modal-overlay" id="emergency-modal">
+        <div class="modal emergency-modal-content" id="emergency-main">
+            <div class="emergency-icon-large">
+                <span class="material-symbols-rounded">emergency</span>
+            </div>
+            <h2>Emergency SOS</h2>
+            <p>Tap the button below to alert security. Your location will be shared automatically.</p>
+            <button class="emergency-trigger-btn" id="emergency-trigger" onclick="triggerEmergency()">
+                <span class="material-symbols-rounded">sos</span>
+                SEND SOS ALERT
+            </button>
+            <button class="modal-close-btn" onclick="closeModal('emergency-modal')">Cancel</button>
+        </div>
+        <div class="modal emergency-sent-content" id="emergency-sent" style="display:none;">
+            <div class="emergency-sent-icon">
+                <span class="material-symbols-rounded">check_circle</span>
+            </div>
+            <h2>Help is on the way!</h2>
+            <p>Security has been alerted. Stay at your current location.</p>
+            <div class="emergency-details">
+                <p><strong>Your Location:</strong> Section B, Row 14</p>
+                <p><strong>Alert ID:</strong> #EMG-2026-0413</p>
+                <p><strong>Response ETA:</strong> ~2 minutes</p>
+            </div>
+            <button class="modal-close-btn" onclick="closeModal('emergency-modal'); resetEmergency();">Got it</button>
+        </div>
+    </div>
+
+    <!-- Washroom Finder Modal -->
+    <div class="modal-overlay" id="washroom-modal">
+        <div class="modal washroom-modal-content">
+            <div class="modal-header">
+                <h2><span class="material-symbols-rounded">wc</span> Smart Washroom Finder</h2>
+                <button class="modal-x-btn" onclick="closeModal('washroom-modal')">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <p class="modal-subtitle">AI-recommended based on distance & crowd</p>
+            <div class="washroom-list">
+                <div class="washroom-card recommended">
+                    <div class="washroom-status available"><span class="material-symbols-rounded">check_circle</span>
+                    </div>
+                    <div class="washroom-info">
+                        <span class="washroom-name">Washroom 1 – North Stand</span>
+                        <span class="washroom-dist">~1 min walk • 50m away</span>
+                        <div class="washroom-meta">
+                            <span class="wr-badge available">Available</span>
+                            <span class="wr-badge clean">⭐ Clean</span>
+                        </div>
+                    </div>
+                    <span class="recommended-badge">BEST</span>
+                </div>
+                <div class="washroom-card">
+                    <div class="washroom-status moderate"><span class="material-symbols-rounded">schedule</span></div>
+                    <div class="washroom-info">
+                        <span class="washroom-name">Washroom 2 – East Stand</span>
+                        <span class="washroom-dist">~3 min walk • 180m away</span>
+                        <div class="washroom-meta">
+                            <span class="wr-badge moderate">Moderate Wait</span>
+                            <span class="wr-badge">~3 min wait</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="washroom-card">
+                    <div class="washroom-status busy"><span class="material-symbols-rounded">do_not_disturb</span></div>
+                    <div class="washroom-info">
+                        <span class="washroom-name">Washroom 3 – South Stand</span>
+                        <span class="washroom-dist">~5 min walk • 300m away</span>
+                        <div class="washroom-meta">
+                            <span class="wr-badge busy">Busy</span>
+                            <span class="wr-badge">~8 min wait</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="modal-action-btn"
+                onclick="closeModal('washroom-modal'); navigateToScreen('screen-map'); startNavigation('washroom');">
+                <span class="material-symbols-rounded">navigation</span> Navigate to Best Option
+            </button>
+        </div>
+    </div>
+
+    <!-- Parking Modal -->
+    <div class="modal-overlay" id="parking-modal">
+        <div class="modal parking-modal-content">
+            <div class="modal-header">
+                <h2><span class="material-symbols-rounded">local_parking</span> Smart Parking</h2>
+                <button class="modal-x-btn" onclick="closeModal('parking-modal')">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <div class="parking-overview">
+                <div class="parking-stat">
+                    <span class="parking-stat-value available-color">142</span>
+                    <span class="parking-stat-label">Available</span>
+                </div>
+                <div class="parking-stat">
+                    <span class="parking-stat-value busy-color">858</span>
+                    <span class="parking-stat-label">Occupied</span>
+                </div>
+                <div class="parking-stat">
+                    <span class="parking-stat-value">1000</span>
+                    <span class="parking-stat-label">Total</span>
+                </div>
+            </div>
+            <h3 class="parking-section-title">Your Vehicle</h3>
+            <div class="your-parking-card">
+                <span class="material-symbols-rounded">directions_car</span>
+                <div>
+                    <p class="your-spot">Spot B-24 • Zone B</p>
+                    <p class="your-spot-detail">Level 1, Row 3</p>
+                </div>
+                <button class="park-nav-btn"
+                    onclick="closeModal('parking-modal'); navigateToScreen('screen-map'); startNavigation('parking');">
+                    <span class="material-symbols-rounded">navigation</span>
+                </button>
+            </div>
+            <h3 class="parking-section-title">Nearby Available Spots</h3>
+            <div class="parking-spots-list">
+                <div class="parking-spot-card"><span class="spot-id">A-08</span><span class="spot-zone">Zone
+                        A</span><span class="spot-dist">120m</span></div>
+                <div class="parking-spot-card"><span class="spot-id">A-15</span><span class="spot-zone">Zone
+                        A</span><span class="spot-dist">145m</span></div>
+                <div class="parking-spot-card"><span class="spot-id">C-03</span><span class="spot-zone">Zone
+                        C</span><span class="spot-dist">200m</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal-overlay" id="cart-modal">
+        <div class="modal cart-modal-content">
+            <div class="modal-header">
+                <h2><span class="material-symbols-rounded">shopping_cart</span> Your Cart</h2>
+                <button class="modal-x-btn" onclick="closeModal('cart-modal')">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <div class="cart-items" id="cart-items">
+                <div class="cart-empty" id="cart-empty">
+                    <span class="material-symbols-rounded">remove_shopping_cart</span>
+                    <p>Your cart is empty</p>
+                    <span class="cart-empty-sub">Browse food items and add to cart</span>
+                </div>
+            </div>
+            <div class="cart-footer" id="cart-footer" style="display:none;">
+                <div class="cart-total"><span>Total</span><span id="cart-total-amount">₹0</span></div>
+                <div class="cart-pickup">
+                    <span class="material-symbols-rounded">schedule</span>
+                    <span>Estimated pickup: <strong>5-8 min</strong></span>
+                </div>
+                <button class="checkout-btn" onclick="placeOrder()">
+                    <span class="material-symbols-rounded">shopping_bag</span> Place Order
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map Search Modal -->
+    <div class="modal-overlay" id="map-search-modal">
+        <div class="modal map-search-modal-content">
+            <div class="map-search-input-area">
+                <button class="back-btn" onclick="closeModal('map-search-modal')">
+                    <span class="material-symbols-rounded">arrow_back</span>
+                </button>
+                <input type="text" id="map-search-input" placeholder="Search for a location..."
+                    oninput="handleMapSearch(this.value)">
+            </div>
+            <div class="search-results" id="search-results">
+                <button class="search-result-item" onclick="goToDestination('My Seat – B14, Seat 7')">
+                    <span class="material-symbols-rounded">event_seat</span>
+                    <div><span class="sr-name">My Seat – B14, Seat 7</span><span class="sr-detail">Section B, East
+                            Stand</span></div>
+                </button>
+                <button class="search-result-item" onclick="goToDestination('Food Court 1')">
+                    <span class="material-symbols-rounded">restaurant</span>
+                    <div><span class="sr-name">Food Court 1</span><span class="sr-detail">North Stand • ~4 min</span>
+                    </div>
+                </button>
+                <button class="search-result-item" onclick="goToDestination('Food Court 2')">
+                    <span class="material-symbols-rounded">restaurant</span>
+                    <div><span class="sr-name">Food Court 2</span><span class="sr-detail">South Stand • ~6 min</span>
+                    </div>
+                </button>
+                <button class="search-result-item" onclick="goToDestination('Washroom 1')">
+                    <span class="material-symbols-rounded">wc</span>
+                    <div><span class="sr-name">Nearest Washroom</span><span class="sr-detail">North Stand • ~1
+                            min</span></div>
+                </button>
+                <button class="search-result-item" onclick="goToDestination('Gate A')">
+                    <span class="material-symbols-rounded">door_front</span>
+                    <div><span class="sr-name">Gate A (North)</span><span class="sr-detail">Main entrance • Low
+                            crowd</span></div>
+                </button>
+                <button class="search-result-item" onclick="goToDestination('Gate D')">
+                    <span class="material-symbols-rounded">door_front</span>
+                    <div><span class="sr-name">Gate D (West)</span><span class="sr-detail">Side entrance • Low
+                            crowd</span></div>
+                </button>
+                <button class="search-result-item" onclick="goToDestination('Parking A')">
+                    <span class="material-symbols-rounded">local_parking</span>
+                    <div><span class="sr-name">Parking Zone A</span><span class="sr-detail">Near Gate A • 85 spots
+                            available</span></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div class="modal-overlay" id="notification-modal">
+        <div class="modal notification-modal-content">
+            <div class="modal-header">
+                <h2><span class="material-symbols-rounded">notifications</span> Notifications</h2>
+                <button class="modal-x-btn" onclick="closeModal('notification-modal')">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <div class="notification-list">
+                <div class="notif-item alert-notif">
+                    <div class="notif-icon"><span class="material-symbols-rounded">warning</span></div>
+                    <div class="notif-content">
+                        <p class="notif-title">Crowd Alert: Gate B</p>
+                        <p class="notif-text">Gate B will be congested in ~10 mins. Use Gate D instead.</p>
+                        <span class="notif-time">2 min ago</span>
+                    </div>
+                </div>
+                <div class="notif-item info-notif">
+                    <div class="notif-icon"><span class="material-symbols-rounded">sports_cricket</span></div>
+                    <div class="notif-content">
+                        <p class="notif-title">Match Update</p>
+                        <p class="notif-text">Kohli hits a century! 100*(71)</p>
+                        <span class="notif-time">5 min ago</span>
+                    </div>
+                </div>
+                <div class="notif-item success-notif">
+                    <div class="notif-icon"><span class="material-symbols-rounded">check_circle</span></div>
+                    <div class="notif-content">
+                        <p class="notif-title">Friend Joined</p>
+                        <p class="notif-text">Rahul Sharma joined the event and is sharing location.</p>
+                        <span class="notif-time">15 min ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span class="material-symbols-rounded toast-icon" id="toast-icon">check_circle</span>
+        <span id="toast-message">Action completed</span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
